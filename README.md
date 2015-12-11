@@ -1,4 +1,4 @@
-# mmwap
+# mgwap
 
 how to use:
 
