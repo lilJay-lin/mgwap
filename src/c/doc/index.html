@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="demo.css">	
+	<link rel="shortcut icon" href="http://mm.10086.cn/favicon.ico" mce_href="http://mm.10086.cn/favicon.ico" type="image/x-icon">
+    <title>MM客户端WAP调起</title>
+</head>
+<body>
+<div>
+	<h2>WAP调起</h2>
+	<hr />
+	<ul>
+		<li><a href="#version" class="domlink">历史版本</a></li>
+		<li><a href="#api_detail" class="domlink">WAP调起客户端API</a></li>
+		<li><a  href="demo.html" class="domlink" title="WAP调起">WAP调起DEMO</a></li>
+	</ul>
+</div>
+<br />
+<div >
+ <h2><a name="api_detail" class="domlink">WAP调起客户端API</a></h2>
+ 
+ <hr />
+
+ <div class="subcontent">
+ 	<table class="dataintable" >
+<tbody><tr><th width="90">步骤</th><th style="width: auto;">说明</th><th style="width: auto;">代码示例</th>
+
+<tr>
+<td>
+	1.导入JS
+</td>
+<td>
+<pre>
+导入MM WAP调起JavaScript代码
+</pre>
+</td>
+<td>
+<pre>
+&lt;script type="text/javascript" src="http://a.10086.cn/c/mmapp.js" charset="utf-8" &gt;&lt;/script&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+2.初始化配置
+</td>
+<td>
+<pre>
+提供各种参数配置，可通过mm.init/mm.set方法配置，代码在加载mmapp.js后执行，
+详细配置参数，可查看<a href="#agr_detail">WAP调起API提供的参数配置说明</a>;
+
+</pre>
+</td>
+<td>
+<pre>
+&lt;script&gt;  	
+mm.init({
+	showtitle:true,//true：显示；false：隐藏
+	channelid:5410093632 //a.l0086.cn 默认使用渠道ID：5410093632
+})
+&lt;script&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+	3.应用下载
+</td>
+<td>
+<pre>
+按钮添加触发事件mm.download(应用ID)，调用MM客户端下载指定应用
+</pre>
+</td>
+<td>
+<pre>
+&lt;a onclick="mm.download(应用ID)" &gt;下载应用&lt;/a&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+
+
+
+<tr>
+<td>
+3.应用详情
+</td>
+<td>
+<pre>
+按钮添加触发事件mm.detail(应用ID)，调用MM客户端展示指定应用详情页面
+</pre>
+</td>
+<td>
+<pre>
+&lt;a onclick="mm.detail(应用ID)" &gt;应用详情&lt;/a&gt;
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td>
+3.应用批量下载
+</td>
+<td>
+<pre>
+js调用mm.batchDownload(应用ID列表)触发应用批量下载,应用ID列表格式可以是字符串或数组。<br/>
+字符串格式：使用"/"分割列表ID，eg:"应用ID1/应用ID2/..."<br/>
+数组格式：把应用ID列表按数组存储即可，eg:[应用ID1,应用ID2,...]
+</pre>
+</td>
+<td>
+<pre>
+
+mm.batchDownload("/300002784578/300002457498")
+
+</pre>
+</td>
+</tr>
+
+
+<tr>
+	<td>
+		3.打开指定url页面
+	</td>
+	<td>
+<pre>
+js调用mm.open(url, check)调用MM打开指定url地址，check 为布尔值，配置MM调起失败是否下载MM，<br/>默认为true（下载MM）
+</pre>
+	</td>
+	<td>
+<pre>
+
+mm.open("http://xxxx.xxx.com/xx.html")
+
+</pre>
+	</td>
+</tr>
+
+
+</tbody></table>
+ </div>
+
+</div>
+<br />
+<br />
+<div>
+	<h2 ><a name="version" class="domlink">历史版本</a></h2>
+	<hr />
+	<div class="subcontent">
+		<div>
+			<table class="version-detail">
+				<tr>
+					<th>版本</th>
+					<th>版本功能</th>
+				</tr>
+				<tr>
+					<td>三期</td>
+					<td>
+						<ol>
+							<li>wap调起mm下载应用功能</li>
+							<li>wap调起mm打开详情功能</li>
+						</ol>
+					</td>
+				</tr>
+				<tr>
+					<td>四期</td>
+					<td>
+						<ol>
+							<li>wap调起mm批量下载应用功能</li>
+						</ol>
+					</td>
+				</tr>
+				<tr>
+					<td>五期</td>
+					<td>
+						<ol>
+							<li>wap调起mm新增微信和流量器引导弹窗</li>
+						</ol>
+					</td>
+				</tr>
+				<tr>
+					<td>六期</td>
+					<td>
+						<ol>
+							<li>wap调起mm打开指定页面</li>
+						</ol>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<br />
+<br />
+<div>
+	<h2 ><a name="agr_detail" class="domlink">WAP调起API提供的参数配置说明</a></h2>
+	<hr/>
+	<div class="subcontent">
+	<p>可配置参数：</p>
+		<pre>
+batchMaxApps:"15" ;//批量下载最大应用数，默认15，目前客户端最多支持15个应用下载
+showtitle:true ;//调起客户端，在客户端显示调起端浏览器名字，默认显示
+channelid:'5410093632';//渠道ID设置，a.l0086.cn 默认使用渠道ID：5410093632
+onIntent:true;//端口激活客户端失败，默认启用intent调起
+<div class="del">reCall:2000;//端口激活客户端失败,启用intent调起之后，默认2秒后执行用户操作</div>
+<div class="del">
+	lockTime:2000;//intent调起的时间锁，默认2秒内只能进行一次intent调起
+</div>
+<strong>
+注：5期开始不再设置reCall和lockTime，原有页面做设置不再有效，默认一次激活过程未结束时锁定用户激活操作，intent调起是激活失败时调用，暂不做限制。
+</strong>
+</pre>
+<p>参数配置方法，不配置都是用默认值：</p>
+<p>1.通过初始化配置</p>
+<pre>
+mm.init({
+	showtitle:true,
+	channelid:'5410093632',
+	onIntent:true,
+	<div class="del">reCall:2000,</div>
+	<div class="del">lockTime:2000</div>
+})
+</pre>
+<p>2.通过set方法配置</p>
+<pre>
+mm.set("参数名",参数值);
+举例，设置channelid:mm.set("channelid",'5410093632');
+</pre>
+	</div>
+</div>
+</body>
+</html>

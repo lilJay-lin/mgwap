@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8 "/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>WEB调起客户端六期</title>
+    <script src="../mmapp.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+        我是中转页
+</body>
+<script>
+	window.onload = function(){
+		var arr ,params,param,i = l = 0 ,search = location.search;
+		if(search.length > 0){
+			search = search.substr(1);
+			arr = search.split('&');
+			l = arr.length;
+			for(;i < l;i++){
+				var params = arr[i];
+				if(params.indexOf('=') > -1){
+					param = params.split('=')[1];
+					mm.open(param);
+					break;
+				}
+			}
+		}
+	}
+</script>
+</html>
