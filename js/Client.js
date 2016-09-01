@@ -144,7 +144,7 @@ var slice = [].slice,
         reqUrl: {//odp.mmarket.com => zjw.mmarket.com
             index: "miguhui://index",
             launch: "miguhui://launchbrowser?url=",
-            //appdetail: "mm://appdetail?requestid=app_info_forward&contentid=",
+            appdetail: "mm://appdetail?requestid=app_info_forward&contentid=",
             //downloadUri: "http://zjw.mmarket.com/t.do?requestid=app_order&goodsid=999100008100930100001752138{contentid}&payMode=1",
             //wetchartmm: "http://a.app.qq.com/o/simple.jsp?pkgname=com.aspire.mm",
             //mmrelaapp: "http://zjw.mmarket.com/mmapk/{channelid}/mmarket-999100008100930100001752138{contentid}-180.apk",
@@ -281,8 +281,18 @@ var slice = [].slice,
                 canIntent = Config["onIntent"],
                 reqUrl = me.reqUrl,
                 b = browserUtil,
-                timeout = b.ua.match(/(UCBrowser)|(UCWEB)/i)?3000:900,
+                isUc = b.ua.match(/(UCBrowser)|(UCWEB)/i),
+                isQq =  b.isQq() ?  1 : 0,
+                timeout = isUc ?  2000 : 900,
                 args = slice.call(arguments);
+            var m = args[0];
+            var is_alert = m === 'open' && !args[2];
+            var cb = function(evtName){
+                var n = evtName == undefined ? "server.check.start" : evtName;
+                args.unshift("downloadmm");
+                args.unshift(n);
+                Event.trigger.apply(Event,args);
+            };
             if (b.isWechat()) {
                 /*
                 注：MIGUHUI1.0.0 只有调起功能，微信也不做提示
@@ -297,25 +307,62 @@ var slice = [].slice,
                     type: "weixin",
                     flag: flag
                 })*/
-            } else if (!canIntent) {
-                //me.downloadmm.apply(me, arguments);
+                cb('server.check.error')
             } else {
-                var t = Date.now();
-                    //args = slice.call(arguments);
-                me.iframe(reqUrl.index);
-                var d = Date.now();
+                var t = Date.now(),
+                    needCheckAgain = m != 'open' && m != 'detail';
+                //args = slice.call(arguments);
+                if(m === 'open'){
+                    var url = args[1];
+                    !!url && !isQq ? me.iframe(reqUrl.launch + encodeURIComponent(url)) : me.iframe(reqUrl.index);
+                }else if(m === 'detail'){
+                    var id = args[1];
+                    !!id && !isQq ? me.iframe(reqUrl.appdetail + id ) : me.iframe(reqUrl.index);
+                } else{
+                    me.iframe(reqUrl.index);
+                }
+                //var d = Date.now();
+
+                /*
+                 UC浏览器走轮训流程
+                 */
+                /*if(b.ua.match(/(UCBrowser)|(UCWEB)/i)){
+                 args.unshift("downloadmm")
+                 args.unshift("server.longcheck.start");
+                 Event.trigger.apply(Event,args);
+                 }else{*/
+                /*var cb = function(evtName){
+                    var n = evtName == undefined ? "server.check.start" : evtName;
+                    args.unshift("downloadmm");
+                    args.unshift(n);
+                    Event.trigger.apply(Event,args);
+                };*/
                 setTimeout(function() {
                     var e = Date.now();
                     //					debug.log(e - t);
                     //时间判断方法个别浏览器无效，如UC，基本js不挂起
-                    if (!t || e - t < timeout + 200) {
-                        args.unshift("downloadmm");
+                    /*
+                     open / detail scheme直接传url/contentid跳到指定页面，所以不需要做二次校验，
+                     直接判断为未下载： me.downloadmm
+                     二次校验流程：args.unshift("downloadmm")
+                     */
+                    if(isQq){// QQ走二次激活流程
+                        cb();
+                    }else{
+                        if (!t || e - t < timeout + 200) {//是打开页面的，判断调起失败，直接下载MM,排除不需要下载MM的（is_alert)
+                            needCheckAgain ?  (
+                                cb()
+                            ) : (!is_alert && me.downloadmm.apply(me, args),cb('server.check.error'));
+
+                        }else if(needCheckAgain){//成功调起，如果是非详情的，需要做二次调起，因为scheme的方式没有直接下载应用
+                            cb();
+                        }
                     }
-                    args.unshift("server.check.start");
-                    Event.trigger.apply(Event,args);
-                }, timeout)
+                }, timeout);
+                /*}*/
             }
         },
+        downloadmm: function(){}
 /*
  注：MIGUHUI1.0.0 只有调起功能，不做MM下载功能
          downloadmm: function(method) {

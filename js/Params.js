@@ -6,7 +6,7 @@
 var Util = require('./Util'),
     url = "http://{adress}:{port}/moversion",
     baseUrl = "http://{adress}:{port}/action=",
-    domain = "pps.a.migu.cn",
+    domain = "wx.mm-img.com",
     remoteIp = "127.0.0.1";
 
 if (!!navigator.userAgent.toLowerCase().match(/MicroMessenger|MQQBrowser/i)) {
